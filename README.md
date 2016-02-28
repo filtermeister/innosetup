@@ -1,4 +1,6 @@
-Hiya!
+FilterMeister plugin InnoSetup
+==============================
+MIT license applies
 
 Inside you'll find a simple installer script you can use for your own
 Photoshop plugins.  It uses InnoSetup to install both a 32-bit & 64-bit
