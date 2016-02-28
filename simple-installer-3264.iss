@@ -476,23 +476,72 @@ end;
 procedure DetectPhotoshopFolders(var pluginFolders: TArrayOfPluginFolders);
 var
   i: Integer;
+  s: Integer;
   TempPluginFolder: TPluginFolder;
 	KeyName: String;
 	Param: String;
 	ProdName: String;
 	Version: String;
+  Subdirs: array of String;
 begin
+  SetArrayLength(Subdirs, 9);
+  Subdirs[0] := 'Zusatzmodule';
+  Subdirs[1] := 'Modules Externes';
+  Subdirs[2] := 'Insteekmodules';
+  Subdirs[3] := 'Plugins';
+  Subdirs[4] := 'Plug-in';
+  Subdirs[5] := 'Plug-ins';
+  Subdirs[6] := 'Plug-in-program';
+  Subdirs[7] := 'Plugin-moduler';
+  Subdirs[8] := 'Ekstramoduler';
+
+  // Photoshop versions 5 - 7
   Param := 'PluginPath';
-  for i := 5 to 15 do     // Photoshop versions 5 - CS9
+  for i := 5 to 7 do
   begin
     KeyName   := 'Software\Adobe\Photoshop\' + IntToStr(i) + '.0\';
     Version   := IntToStr(i) + '.0';
-    if i < 6 then
-      ProdName  := 'Photoshop ' + IntToStr(i)
-    else if i < 13 then
-      ProdName  := 'Photoshop CS';
-      if i > 7 then ProdName := ProdName + IntToStr(i - 6)
-    else ProdName := 'Photoshop CC (' + IntToStr(i) + '.0)';
+    ProdName  := 'Photoshop ' + IntToStr(i)
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+  end;
+
+  // Photoshop 5.5
+	KeyName  := 'Software\Adobe\Photoshop\5.5\';
+	Param    := 'PluginPath';
+	ProdName := 'Photoshop 5.5';
+	Version  := '5.5';
+  if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+
+  // Photoshop CS
+	KeyName  := 'Software\Adobe\Photoshop\8.0\';
+	Param    := 'PluginPath';
+	ProdName := 'Photoshop CS';
+	Version  := '8.0';
+  if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+
+  // Photoshop CS2 and CS3
+  for i := 9 to 10 do
+  begin
+    KeyName  := 'Software\Adobe\Photoshop\' + IntToStr(i) + '.0\';
+    Param    := 'PluginPath';
+    ProdName := 'Photoshop CS' + IntToStr(2 + (i - 9));
+    Version  := IntToStr(i) + '.0';
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then begin
+      for s := 0 to length(SubDirs) - 1 do
+      begin;
+        if DirExists(TempPluginFolder.Folder + Subdirs[s] + '\') then TempPluginFolder.Folder := TempPluginFolder.Folder + Subdirs[s] + '\'
+      end;
+      AddToPluginFolders(TempPluginFolder, pluginFolders);
+    end;
+  end;
+
+  // Photoshop CS4 and CS5 (64-bit support for Windows from CS4)
+  for i := 11 to 12 do
+  begin
+    KeyName  := 'Software\Adobe\Photoshop\' + IntToStr(i) + '.0\';
+    Param    := 'PluginPath';
+    ProdName := 'Photoshop CS' + IntToStr(4 + (i - 11));
+    Version  := IntToStr(i) + '.0';
     if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
     if Is64BitInstallMode then
     begin
@@ -501,23 +550,34 @@ begin
     end;
   end;
 
-  i := 80;
-  KeyName   := 'Software\Adobe\Photoshop\' + IntToStr(i) + '.0\';
-  Version   := IntToStr(i) + '.0';
-  ProdName := 'Photoshop CC 2014';
+  // Photoshop CS5.1
+  KeyName  := 'Software\Adobe\Photoshop\55.0\';
+	Param    := 'PluginPath';
+	ProdName := 'Photoshop CS5.1';
+	Version  := '55.0';
   if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
   if Is64BitInstallMode then
+  begin
+    ProdName := ProdName + ' (64-bit)';
+    if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+  end;
+
+  // Photoshop CS6 - CC2015 - CC2019 (hopefully)
+  for i := 6 to 13 do
+  begin
+    KeyName  := 'Software\Adobe\Photoshop\' + IntToStr(i) + '0.0\';
+    Param    := 'PluginPath';
+    if i = 6 then ProdName := 'Photoshop CS6'
+    else if i = 7 then ProdName := 'Photoshop CC'     
+    else ProdName := 'Photoshop CC ' + IntToStr(2014 + (i - 8));
+    Version  := IntToStr(i) + '0.0';
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    if Is64BitInstallMode then
     begin
       ProdName := ProdName + ' (64-bit)';
       if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
     end;
-                                                                                                                                                      
-  // Adobe also made Photoshop 5.5, just to mess with us....
-	KeyName  := 'Software\Adobe\Photoshop\5.5\';
-	Param    := 'PluginPath';
-	ProdName := 'Photoshop 5.5';
-	Version  := '5.5';
-  if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+  end;
 end;
 
 
