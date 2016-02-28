@@ -25,7 +25,7 @@
 
 ; If you don't want a License or ReadMe, just delete these lines.
 #define LicenseFileName "Files\license.txt"
-#define ReadMeFile      "readme.txt"
+#define ReadMeFile      "Files\readme.txt"
 
 ; If you don't want a background, delete this line.
 #define UseInstallBackground "USEBACKGROUND"
@@ -100,7 +100,7 @@ ArchitecturesInstallIn64BitMode=x64
   Source: "Files\{#SixtyFourBit8BFFile}"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode
 #endif
 #ifdef ReadMeFile
-  Source: "Files\{#ReadMeFile}"; DestDir: "{app}"; Flags: isreadme
+  Source: "{#ReadMeFile}"; DestDir: "{app}"; Flags: isreadme
 #endif
 ; You might need to insert your own files here if you have additional
 ; support files to be installed.  You might need to work on this on
