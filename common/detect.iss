@@ -227,7 +227,8 @@ end;
 ///  DetectPhotoshopElementsFolders
 ///
 ///  Detects plug-in folders for versions of Adobe Photoshop Elements
-///  from 5 through 9.  Tests for the presence of the relevant
+///  from 2 through 14, and adds untested support for future versions
+///  up to version 20.  It tests for the presence of the relevant
 ///  registry string, and if found, it adds the folder value listed
 ///  there to our array of folders to install to.
 ///
@@ -235,7 +236,7 @@ end;
 ///
 ///  HKLM\Software\Adobe\Photoshop Elements\x.0\
 ///
-///  where x is the version number (ie 5 - 14).
+///  where x is the version number (ie 2- 14).
 ///
 ///  This is a 'procedure', not a 'function', because in Pascal a
 ///  function that doesn't return a value is called a procedure.
@@ -245,29 +246,13 @@ procedure DetectPhotoshopElementsFolders(var pluginFolders: TArrayOfPluginFolder
 var
   i: Integer;
   TempPluginFolder: TPluginFolder;
-	KeyName: String;
-	Param: String;
-	ProdName: String;
-	Version: String;
+  KeyName: String;
+  Param: String;
+  ProdName: String;
+  Version: String;
 begin
-  Param := 'PluginPath';
-  for i := 3 to 9  do     // Photoshop Elements versions 3 - 9
-  begin
-    KeyName   := 'Software\Adobe\Photoshop Elements\' + IntToStr(i) + '.0';
-    Version   := IntToStr(i) + '.0';
-    ProdName  := 'Photoshop Elements ' + IntToStr(i);
-    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
-    if (i >= 13) and Is64BitInstallMode then  // 64-bit support starting version 13
-    begin
-      ProdName := ProdName + ' (64-bit)';
-      if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, ProdName, Version, TRUE) then begin
-        AddToPluginFolders(TempPluginFolder, pluginFolders);
-      end
-    end;
-  end;
-
   Param := '';
-  for i := 10 to 14  do     // Photoshop Elements versions 10 - 14
+  for i := 2 to 20  do     // Photoshop Elements versions 2 - 14 tested
   begin
     KeyName   := 'Software\Adobe\Photoshop Elements\' + IntToStr(i) + '.0\PluginPath';
     Version   := IntToStr(i) + '.0';
