@@ -13,7 +13,7 @@ You'll need InnoSetup to use this, download it from:
 
 http://www.jrsoftware.org
 
-I've tested it with the 5.5.8 non-Unicode version.
+Tested with version 5.5.8, both non-Unicode and Unicode version.
 
 The installer script itself is the .iss file, which you can open in
 any text editor.  InnoSetup uses Pascal code for the tricky stuff,
