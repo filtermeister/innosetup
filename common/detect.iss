@@ -168,7 +168,7 @@ begin
     ProdName := 'Photoshop CS' + IntToStr(2 + (i - 9));
     Version  := IntToStr(i) + '.0';
     if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then begin
-      for s := 0 to length(SubDirs) - 1 do
+      for s := 0 to GetArrayLength(SubDirs) - 1 do
       begin;
         if DirExists(TempPluginFolder.Folder + Subdirs[s] + '\') then TempPluginFolder.Folder := TempPluginFolder.Folder + Subdirs[s] + '\'
       end;
