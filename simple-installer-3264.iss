@@ -174,13 +174,6 @@ var
   isFile64Extracted: Boolean;
   isFileExtracted: Boolean;
 begin
-  // How do we decide if we should only install the 32-bit
-  // version, 64-bit version, or both?
-//  #ifdef ThirtyTwoBit8BFFile
-//  #endif
-//  #ifdef SixtyFourBit8BFFile
-//    ExtractTemporaryFile('{#SixtyFourBit8BFFile}')
-//  #endif
   for I := 0 to GetArrayLength(pluginFolders) - 1 do
   begin
     if WizardForm.TasksList.Checked[I + 1] then
