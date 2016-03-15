@@ -1,0 +1,1 @@
+This is an example file that is copied into the installation directory, but not the plugin directories.
