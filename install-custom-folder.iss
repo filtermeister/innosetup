@@ -169,10 +169,10 @@ english.CustomDirCaption=Select custom plug-in folder
 english.CustomDirDescription=Where should the plug-in be installed?
 english.CustomDirSubCaption=Select a custom folder in which the "{#ProductName} {#MajorVersion}" plug-in should be installed.
 dutch.InstallPluginsInto=Installeer plug-in in:
-dutch.CustomDirTask=Installeer plug-in in een extra map
-dutch.CustomDirCaption=Selecteer extra plug-in map
-dutch.CustomDirDescription=Waar moet de plug-in worden geïnstalleerd?
-dutch.CustomDirSubCaption=Selecteer een extra map waarin de "{#ProductName} {#MajorVersion}" plug-in moet worden geïnstalleerd.
+dutch.CustomDirTask=Installeer plug-in in een map naar keuze
+dutch.CustomDirCaption=Selecteer plug-in map naar keuze
+dutch.CustomDirDescription=In welke map moet de plug-in worden geïnstalleerd?
+dutch.CustomDirSubCaption=Selecteer een map naar keuze waarin de "{#ProductName} {#MajorVersion}" plug-in moet worden geïnstalleerd.
 
 [Tasks]
 Name: "InstallPluginTask"; Description: "{#ProductName} {#MajorVersion}"; GroupDescription: "{cm:InstallPluginsInto}";
