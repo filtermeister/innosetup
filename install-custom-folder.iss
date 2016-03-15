@@ -57,12 +57,6 @@
 ; Comment out if you want to disable this feature
 #define CustomDirectory
 
-; Support for code-signing (both with SHA-1 and SHA-256 certificates)
-; is possible, but not included in this script yet.  SignTool is the
-; [Setup] command you'll need to use.  I highly recommend using kSign
-; from kSoftware for your code-signing, so you don't have to download
-; the entire Windows Platform SDK just to get a code signing app.
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -116,11 +110,30 @@ OutputBaseFilename={#InstallName}
 ; Remember that x86 is 32-bit, x64 is 64-bit!
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
+
+; Code signing with Authenticode certificate.
+; The following demonstrates using the "kSign" tool by K Software to sign
+; installers. The example used a self-signed PFX certificate. Note that self-
+; signed certificates are not recognized by computers other than your own;
+; you must get a certificate from a Certificate Authority (CA) trusted by
+; Microsoft.
+; 1. Setup kSign
+; 1a. Download and install kSign (free) from http://codesigning.ksoftware.net/
+; 1b. Find the path where kSign was installed.
+; 1c. In Inno Setup, go to menu "Tools" > "Configure Sign Tools...".
+; 1d. Add a new Sign Tool, named "ksign" with command "<PATH TO KSIGN>\kSignCMD.exe $p".
+; 2. Obtain a "Microsoft Authenticode" certificate from any provider.
+; 3. Change the SignTool directive. 
+; 3a. Specify the full path to the certificate (relative path won't work).
+; 3b. Specify the password for the certificate (in our example "PASSWORD").
+; 3c. Optionally, specify a description (/d) and/or URL (/du).
+;SignTool=kSign /f "{#SourcePath}\example_certificate.pfx" /p PASSWORD /d "{#CompanyName} {#ProductName} {#VersionNumber}" /du "{#CompanyURL}" $f
+; Self-signed certificate generated using https://www.pluralsight.com/blog/software-development/selfcert-create-a-self-signed-certificate-interactively-gui-or-programmatically-in-net
+
+
                                                                           
 ; This is required for the InnoSetup preprocessor (ISPP). Do not change it.
 #define I
-
-
 
 [Files]
 #sub InstallFile
