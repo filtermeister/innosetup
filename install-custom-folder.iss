@@ -17,7 +17,34 @@
 #define SupportURL      "http://www.example.com/"
 #define InstallName     "ExamplePluginInstall"
 
-;TODO Separate "InstallFiles" from "PluginFiles".
+; "Plug-in" spelling.
+; This defines how the word "Plug-in" should be spelled in the
+; various languages. Specify the capitalized form; the word will
+; be automatically uncapitalized if needed.
+#define english_Plugin "Plug-in"
+#define brazilianportuguese_Plugin "Plug-in"
+#define catalan_Plugin "Plug-in"
+#define czech_Plugin "Plug-in"
+#define danish_Plugin "Plug-in"
+#define dutch_Plugin "Plug-in"
+#define finnish_Plugin "Plug-in"
+#define french_Plugin "Plug-in"
+#define german_Plugin "Plug-in"
+#define hebrew_Plugin "Plug-in"
+#define hungarian_Plugin "Plug-in"
+#define italian_Plugin "Plug-in"
+#define japanese_Plugin "Plug-in"
+#define norwegian_Plugin "Plug-in"
+#define polish_Plugin "Plug-in"
+#define portuguese_Plugin "Plug-in"
+#define russian_Plugin "Plug-in"
+#define slovenian_Plugin "Plug-in"
+#define spanish_Plugin "Plug-in"
+#define greek_Plugin "Plug-in"
+
+; Specify a list of files to install to the installation directory.
+; If you want to share physical files on disk, this would be the 
+; most common place to install those files.
 #dim InstallFiles[1]
 #define InstallFiles[0] "install.txt"
 
@@ -161,18 +188,6 @@ ArchitecturesInstallIn64BitMode=x64
 #endif
 
 #include "common/locale.iss"
-
-[CustomMessages]
-english.InstallPluginsInto=Install plug-in into:
-english.CustomDirTask=Install plug-in to a custom folder
-english.CustomDirCaption=Select custom plug-in folder
-english.CustomDirDescription=Where should the plug-in be installed?
-english.CustomDirSubCaption=Select a custom folder in which the "{#ProductName} {#MajorVersion}" plug-in should be installed.
-dutch.InstallPluginsInto=Installeer plug-in in:
-dutch.CustomDirTask=Installeer plug-in in een map naar keuze
-dutch.CustomDirCaption=Selecteer plug-in map naar keuze
-dutch.CustomDirDescription=In welke map moet de plug-in worden geïnstalleerd?
-dutch.CustomDirSubCaption=Selecteer een map naar keuze waarin de "{#ProductName} {#MajorVersion}" plug-in moet worden geïnstalleerd.
 
 [Tasks]
 Name: "InstallPluginTask"; Description: "{#ProductName} {#MajorVersion}"; GroupDescription: "{cm:InstallPluginsInto}";

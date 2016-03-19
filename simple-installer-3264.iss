@@ -17,6 +17,31 @@
 #define SupportURL      "http://www.example.com/"
 #define InstallName     "ExamplePluginInstall"
 
+; "Plug-in" spelling.
+; This defines how the word "Plug-in" should be spelled in the
+; various languages. Specify the capitalized form; the word will
+; be automatically uncapitalized if needed.
+#define english_Plugin "Plug-in"
+#define brazilianportuguese_Plugin "Plug-in"
+#define catalan_Plugin "Plug-in"
+#define czech_Plugin "Plug-in"
+#define danish_Plugin "Plug-in"
+#define dutch_Plugin "Plug-in"
+#define finnish_Plugin "Plug-in"
+#define french_Plugin "Plug-in"
+#define german_Plugin "Plug-in"
+#define hebrew_Plugin "Plug-in"
+#define hungarian_Plugin "Plug-in"
+#define italian_Plugin "Plug-in"
+#define japanese_Plugin "Plug-in"
+#define norwegian_Plugin "Plug-in"
+#define polish_Plugin "Plug-in"
+#define portuguese_Plugin "Plug-in"
+#define russian_Plugin "Plug-in"
+#define slovenian_Plugin "Plug-in"
+#define spanish_Plugin "Plug-in"
+#define greek_Plugin "Plug-in"
+
 ; Specify a list of common files to install for both the 32-bit &
 ; 64-bit version of your installation.
 ; If you don't have any common files, then comment these lines out.
