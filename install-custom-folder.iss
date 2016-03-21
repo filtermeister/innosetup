@@ -84,6 +84,16 @@
 ; Comment out if you want to disable this feature
 #define CustomDirectory
 
+; Code signing with Authenticode certificate.  If you don't have a code
+; signing certificate (eg from Comodo or Verisign) leave this commented out.
+; Uncomment only one of UseKSign or UseSignTool, depending which you use.
+;#define SignInstaller
+;#define UseKSign
+;#define UseSignTool
+;#define PFXFile "C:\Full_Path_To_Your_PFX_File\example_certificate.pfx"
+;#define PFXPassword "PASSWORD"
+;#define TimestampServer "http://timestamp.comodoca.com/authenticode"
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -154,11 +164,19 @@ ArchitecturesInstallIn64BitMode=x64
 ; 3a. Specify the full path to the certificate (relative path won't work).
 ; 3b. Specify the password for the certificate (in our example "PASSWORD").
 ; 3c. Optionally, specify a description (/d) and/or URL (/du).
-;SignTool=kSign /f "{#SourcePath}\example_certificate.pfx" /p PASSWORD /d "{#CompanyName} {#ProductName} {#VersionNumber}" /du "{#CompanyURL}" $f
 ; Self-signed certificate generated using https://www.pluralsight.com/blog/software-development/selfcert-create-a-self-signed-certificate-interactively-gui-or-programmatically-in-net
+#ifdef SignInstaller
+  #ifdef UseKSign
+    SignTool=kSign /f "{#PFXFile}" /p {#PFXPassword} /d "{#ProductName} {#VersionNumber}" /du "{#CompanyURL}" $f
+  #endif
+  #ifdef UseSignTool
+    SignTool=signtool sign /f $q{#PFXFile}$q /p {#PFXPassword} /fd sha256 /td sha256 /tr {#TimestampServer} /as /d $q{#ProductName} {#VersionNumber}$q /du $q{#CompanyURL}$q  $f
+    SignTool=signtool sign /f $q{#PFXFile}$q /p {#PFXPassword} /fd sha1 /td sha1 /tr {#TimestampServer} /as /d $q{#ProductName} {#VersionNumber}$q /du $q{#CompanyURL}$q $f
+  #endif
+#endif
 
 
-                                                                          
+
 ; This is required for the InnoSetup preprocessor (ISPP). Do not change it.
 #define I
 
