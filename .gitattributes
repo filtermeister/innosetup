@@ -1,0 +1,9 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# InnoSetup files should use Windows line-endings
+*.iss text eol=crlf
+
+# Make sure github knows these are binary files
+*.8bf binary
+*.pfx binary
