@@ -84,6 +84,10 @@
 ; Comment out if you want to disable this feature
 #define CustomDirectory
 
+; Comment this line out if you don't want to use Company / Vendor names
+; (eg Adobe, Jasc, Corel, Serif) when describing graphics programs.
+#define UseVendorNames
+
 ; Code signing with Authenticode certificate.  If you don't have a code
 ; signing certificate (eg from Comodo or Verisign) leave this commented out.
 ; Uncomment only one of UseKSign or UseSignTool, depending which you use.
@@ -229,6 +233,7 @@ Type: dirifempty; Name: "{app}\";
 ////////////////////////////////////////
 
 type TPluginFolder = record
+  VendorName     : string;
   ProductName    : string;
   Version        : string;
   IsSixtyFourBit : Boolean;
@@ -253,9 +258,10 @@ var
 
 //---------------------------------------------------------------------------
 // Add the detected plugins to the task list
-procedure GenerateTaskList();
+procedure GenerateTaskList(usevendornames: Boolean);
 var
   I: Integer;
+  productLabel: string;
 begin
   if externalProgramsAdded = False then
   begin
@@ -266,7 +272,10 @@ begin
     // Now add all the graphics programs we found installed
     for I := 0 to GetArrayLength(pluginFolders) - 1 do
     begin
-      WizardForm.TasksList.AddCheckBox(pluginFolders[I].ProductName, '', 0, true, true, false, false, nil);
+      if usevendornames = True then
+        productLabel := pluginFolders[I].VendorName + ' ' + pluginFolders[I].ProductName
+      else productLabel := pluginFolders[I].ProductName;
+      WizardForm.TasksList.AddCheckBox(productLabel, '', 0, true, true, false, false, nil);
     end;
   end;
   externalProgramsAdded := True;
@@ -370,7 +379,11 @@ begin
       externalProgramsAdded := False;
 
     wpSelectTasks:
-      GenerateTaskList();
+      #ifdef UseVendorNames
+        GenerateTaskList(true);
+      #else
+        GenerateTaskList(false);
+      #endif
 
     wpReady:
       ShowPluginTasks();

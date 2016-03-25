@@ -16,7 +16,7 @@
 ///  @param version  Product Version (double) (eg 6.0 for Photoshop)
 /////////////////////////////////////////////////////////////////////
 
-function GetGenericDirectory(var NewPluginFolder: TPluginFolder; Hive: Integer; RegKey: String; regparam: String; prodname: String; version: String; sixtyfourbit: Boolean): Boolean;
+function GetGenericDirectory(var NewPluginFolder: TPluginFolder; Hive: Integer; RegKey: String; regparam: String; vendname: String; prodname: String; version: String; sixtyfourbit: Boolean): Boolean;
 var
 	RegValue: String;
 begin
@@ -28,7 +28,8 @@ begin
 		if RegValue <> '' then
 		begin
 			//MsgBox(prodname + ' detected' + sLineBreak + 'Folder: ' + RegValue, mbInformation, mb_Ok);
-			NewPluginFolder.ProductName := prodname;
+            NewPluginFolder.VendorName := vendname;
+            NewPluginFolder.ProductName := prodname;
 			NewPluginFolder.Version := version;
 			NewPluginFolder.IsSixtyFourBit := sixtyfourbit;
 			NewPluginFolder.Folder := AddBackslash(RegValue);
@@ -83,15 +84,17 @@ var
 	Hive: Integer;
 	KeyName: String;
 	Param: String;
+    VendName: String;
 	ProdName: String;
 	Version: String;
 begin
 	Hive     := HKCU;
 	KeyName  := 'Software\Computerinsel\PhotoLine\Settings';
 	Param    := 'PlugInPathNew1';
-	ProdName := 'Computerinsel PhotoLine';
+    VendName := 'Computerinsel';
+	ProdName := 'PhotoLine';
 	Version  := '10.5';
-	Result   := GetGenericDirectory(pluginFolderResult, Hive, KeyName, Param, ProdName, Version, FALSE);
+	Result   := GetGenericDirectory(pluginFolderResult, Hive, KeyName, Param, VendName, ProdName, Version, FALSE);
 end;
 
 
@@ -121,6 +124,7 @@ var
   TempPluginFolder: TPluginFolder;
 	KeyName: String;
 	Param: String;
+    VendName: String;
 	ProdName: String;
 	Version: String;
   Subdirs: array of String;
@@ -136,14 +140,16 @@ begin
   Subdirs[7] := 'Plugin-moduler';
   Subdirs[8] := 'Ekstramoduler';
 
+  VendName  := 'Adobe';
+
   // Photoshop versions 5 - 7
   Param := 'PluginPath';
   for i := 5 to 7 do
   begin
     KeyName   := 'Software\Adobe\Photoshop\' + IntToStr(i) + '.0\';
     Version   := IntToStr(i) + '.0';
-    ProdName  := 'Photoshop ' + IntToStr(i)
-    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    ProdName  := 'Photoshop ' + IntToStr(i);
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
   end;
 
   // Photoshop 5.5
@@ -151,14 +157,14 @@ begin
 	Param    := 'PluginPath';
 	ProdName := 'Photoshop 5.5';
 	Version  := '5.5';
-  if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
 
   // Photoshop CS
 	KeyName  := 'Software\Adobe\Photoshop\8.0\';
 	Param    := 'PluginPath';
 	ProdName := 'Photoshop CS';
 	Version  := '8.0';
-  if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
 
   // Photoshop CS2 and CS3
   for i := 9 to 10 do
@@ -167,7 +173,7 @@ begin
     Param    := 'PluginPath';
     ProdName := 'Photoshop CS' + IntToStr(2 + (i - 9));
     Version  := IntToStr(i) + '.0';
-    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then begin
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, VendName, ProdName, Version, FALSE) then begin
       for s := 0 to GetArrayLength(SubDirs) - 1 do
       begin;
         if DirExists(TempPluginFolder.Folder + Subdirs[s] + '\') then TempPluginFolder.Folder := TempPluginFolder.Folder + Subdirs[s] + '\'
@@ -183,11 +189,11 @@ begin
     Param    := 'PluginPath';
     ProdName := 'Photoshop CS' + IntToStr(4 + (i - 11));
     Version  := IntToStr(i) + '.0';
-    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
     if Is64BitInstallMode then
     begin
       ProdName := ProdName + ' (64-bit)';
-      if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+      if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, VendName, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
     end;
   end;
 
@@ -196,11 +202,11 @@ begin
 	Param    := 'PluginPath';
 	ProdName := 'Photoshop CS5.1';
 	Version  := '55.0';
-  if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
   if Is64BitInstallMode then
   begin
     ProdName := ProdName + ' (64-bit)';
-    if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, VendName, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
   end;
 
   // Photoshop CS6 - CC2015 - CC2019 (hopefully)
@@ -212,11 +218,11 @@ begin
     else if i = 7 then ProdName := 'Photoshop CC'     
     else ProdName := 'Photoshop CC ' + IntToStr(2014 + (i - 8));
     Version  := IntToStr(i) + '0.0';
-    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
     if Is64BitInstallMode then
     begin
       ProdName := ProdName + ' (64-bit)';
-      if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+      if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, VendName, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
     end;
   end;
 end;
@@ -248,6 +254,7 @@ var
   TempPluginFolder: TPluginFolder;
   KeyName: String;
   Param: String;
+  VendName: String;
   ProdName: String;
   Version: String;
 begin
@@ -256,12 +263,13 @@ begin
   begin
     KeyName   := 'Software\Adobe\Photoshop Elements\' + IntToStr(i) + '.0\PluginPath';
     Version   := IntToStr(i) + '.0';
+    VendName  := 'Adobe';
     ProdName  := 'Photoshop Elements ' + IntToStr(i);
-    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
     if (i >= 13) and Is64BitInstallMode then  // 64-bit support starting version 13
     begin
       ProdName := ProdName + ' (64-bit)';
-      if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, ProdName, Version, TRUE) then begin
+      if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, VendName, ProdName, Version, TRUE) then begin
         AddToPluginFolders(TempPluginFolder, pluginFolders);
       end
     end;
@@ -294,16 +302,20 @@ var
   TempPluginFolder: TPluginFolder;
 	KeyName: String;
 	Param: String;
+    VendName: String;
 	ProdName: String;
 	Version: String;
 begin
+
+  VendName := 'JASC';
+
   Param := 'Directory1';
   for i := 5 to 7  do     // Paint Shop Pro versions 5 - 9
   begin
     KeyName   := 'SOFTWARE\Jasc\Paint Shop Pro ' + IntToStr(i) + '\ImageProcessingFilter\';
     Version   := IntToStr(i) + '.0';
     ProdName  := 'Paint Shop Pro ' + IntToStr(i);
-    if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
   end;
 
   // Paint Shop Pro 8 has slightly different methods
@@ -311,21 +323,21 @@ begin
   KeyName   := 'Software\Jasc\Paint Shop Pro 8\FileLocations\PlugIns\0\';
   Version   := '8.0';
   ProdName  := 'Paint Shop Pro 8';
-  if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+  if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
 
   // Paint Shop Pro 9 is different too
 	Param     := 'Dir';
   KeyName   := 'Software\Jasc\Paint Shop Pro 9\FileLocations\PlugIns\0\';
   Version   := '9.0';
   ProdName  := 'Paint Shop Pro 9';
-  if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+  if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
 
   // Jasc also made Paint Shop Pro Studio, just to mess with us....
 	Param     := 'Dir';
   KeyName   := 'Software\Jasc\Paint Shop Pro Studio 1\FileLocations\PlugIns\0\';
   Version   := '1.0';
   ProdName  := 'Paint Shop Pro Studio';
-  if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+  if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
 end;
 
 
@@ -354,9 +366,11 @@ var
   TempPluginFolder: TPluginFolder;
 	KeyName: String;
 	Param: String;
+    VendName: String;
 	ProdName: String;
 	Version: String;
 begin
+  VendName := 'Corel';
   Param := 'Dir';
   for i := 10 to 13  do     // PaintShopPro versions X - X3
   begin
@@ -364,14 +378,14 @@ begin
     Version   := IntToStr(i) + '.0';
     ProdName  := 'Paint Shop Pro X';
     if i > 10 then ProdName  := ProdName + IntToStr(i - 10);
-    if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
   end;
 
   // Corel also made a version 12.5, just to mess with us...
   KeyName   := 'SOFTWARE\Corel\Paint Shop Pro\12.5\FileLocations\PlugIns\0\';
   Version   := '12.5';
   ProdName  := 'Paint Shop Pro X2 2010';
-  if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+  if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
 end;
 
 
@@ -401,20 +415,22 @@ var
   TempPluginFolder: TPluginFolder;
 	KeyName: String;
 	Param: String;
+    VendName: String;
 	ProdName: String;
 	Version: String;
 begin
+  VendName := 'Corel';
   Param := 'Dir';
   for i := 14 to 19 do     // PaintShopPro versions X4 - X9
   begin
     KeyName   := 'SOFTWARE\Corel\PaintShop Pro\X' + IntToStr(i - 10) + '\FileLocations\PlugIns\0\';
     Version   := IntToStr(i) + '.0';
     ProdName  := 'Paint Shop Pro X' + IntToStr(i - 10);
-    if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+    if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
     if Is64BitInstallMode then
     begin
       ProdName := ProdName + ' (64-bit)';
-      if GetGenericDirectory(TempPluginFolder, HKCU64, KeyName, Param, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+      if GetGenericDirectory(TempPluginFolder, HKCU64, KeyName, Param, VendName, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
     end;
   end;
 end;
@@ -447,25 +463,27 @@ var
   TempPluginFolder: TPluginFolder;
 	KeyName: String;
 	Param: String;
+    VendName: String;
 	ProdName: String;
 	Version: String;
 begin
+  VendName := 'Serif';
   Param := 'PluginRootDir';
   for i := 6 to 19 do     // Photoplus versions 6 - 9, X - X9
   begin
     KeyName   := 'SOFTWARE\Serif\PhotoPlus\' + IntToStr(i) + '.0\Directories\';
     Version   := IntToStr(i) + '.0';
     if i < 10 then
-      ProdName  := 'Serif PhotoPlus ' + IntToStr(i)
+      ProdName  := 'PhotoPlus ' + IntToStr(i)
     else if i = 10 then
-      ProdName  := 'Serif PhotoPlus X'
+      ProdName  := 'PhotoPlus X'
     else
-      ProdName  := 'Serif PhotoPlus X' + IntToStr(i - 10);
-    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+      ProdName  := 'PhotoPlus X' + IntToStr(i - 10);
+    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
     if Is64BitInstallMode then
     begin
       ProdName := ProdName + ' (64-bit)';
-      if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+      if GetGenericDirectory(TempPluginFolder, HKLM64, KeyName, Param, VendName, ProdName, Version, TRUE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
     end;
   end;
 end;

@@ -67,6 +67,10 @@
 ; If you don't want a background, delete this line.
 #define UseInstallBackground "USEBACKGROUND"
 
+; Comment this line out if you don't want to use Company / Vendor names
+; (eg Adobe, Jasc, Corel, Serif) when describing graphics programs.
+#define UseVendorNames
+
 ; Support for code-signing (both with SHA-1 and SHA-256 certificates)
 ; is possible, but not included in this script yet.  SignTool is the
 ; [Setup] command you'll need to use.  I highly recommend using kSign
@@ -174,6 +178,7 @@ Type: dirifempty; Name: "{app}\";
 // Important global constant definitions
 ////////////////////////////////////////
 type TPluginFolder = record
+  VendorName     : string;
   ProductName    : string;
   Version        : string;
   IsSixtyFourBit : Boolean;
@@ -193,9 +198,10 @@ var
 
 
 
-procedure GenerateTaskList();
+procedure GenerateTaskList(usevendornames: Boolean);
 var
   I: Integer;
+  productLabel: string;
 begin
   if externalProgramsAdded = False then
   begin
@@ -211,13 +217,16 @@ begin
       // Now add all the graphics programs we found installed
       for I := 0 to GetArrayLength(pluginFolders) - 1 do
       begin
+        if usevendornames = True then
+          productLabel := pluginFolders[I].VendorName + ' ' + pluginFolders[I].ProductName
+        else productLabel := pluginFolders[I].ProductName;
         if I = 0 then
         begin
-          WizardForm.TasksList.ItemCaption[1] := pluginFolders[I].ProductName;
+          WizardForm.TasksList.ItemCaption[1] := productLabel;
           WizardForm.TasksList.Checked[1]     := True;
         end
         else
-          WizardForm.TasksList.AddCheckBox(pluginFolders[I].ProductName, '', 0, true, true, false, false, nil);
+          WizardForm.TasksList.AddCheckBox(productLabel, '', 0, true, true, false, false, nil);
       end;
     end;
   end;
@@ -260,7 +269,11 @@ begin
       externalProgramsAdded := False;
 
     wpSelectTasks:
-      GenerateTaskList();
+      #ifdef UseVendorNames
+        GenerateTaskList(true);
+      #else
+        GenerateTaskList(false);
+      #endif
 
     //else
   end;
