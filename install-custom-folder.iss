@@ -258,7 +258,7 @@ var
 
 //---------------------------------------------------------------------------
 // Add the detected plugins to the task list
-procedure GenerateTaskList(usevendornames: Boolean);
+procedure GenerateTaskList();
 var
   I: Integer;
   productLabel: string;
@@ -272,9 +272,11 @@ begin
     // Now add all the graphics programs we found installed
     for I := 0 to GetArrayLength(pluginFolders) - 1 do
     begin
-      if usevendornames = True then
+      #ifdef UseVendorNames
         productLabel := pluginFolders[I].VendorName + ' ' + pluginFolders[I].ProductName
-      else productLabel := pluginFolders[I].ProductName;
+      #else
+        productLabel := pluginFolders[I].ProductName;
+      #endif
       WizardForm.TasksList.AddCheckBox(productLabel, '', 0, true, true, false, false, nil);
     end;
   end;
@@ -379,11 +381,7 @@ begin
       externalProgramsAdded := False;
 
     wpSelectTasks:
-      #ifdef UseVendorNames
-        GenerateTaskList(true);
-      #else
-        GenerateTaskList(false);
-      #endif
+      GenerateTaskList();
 
     wpReady:
       ShowPluginTasks();
