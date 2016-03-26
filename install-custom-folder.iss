@@ -290,6 +290,7 @@ procedure ShowPluginTasks();
 var
   I: Integer;
   CustomPluginFolder: TPluginFolder;
+  productLabel: string;
 begin
   #ifdef CustomDirectory
     // Add the directory path if customdir is used
@@ -304,7 +305,12 @@ begin
   begin
     if WizardForm.TasksList.Checked[I + 1] then
     begin
-      Wizardform.ReadyMemo.Lines.Add(StringOfChar(' ', 3 * 3) + pluginFolders[I].ProductName);
+      #ifdef UseVendorNames
+        productLabel := pluginFolders[I].VendorName + ' ' + pluginFolders[I].ProductName
+      #else
+        productLabel := pluginFolders[I].ProductName;
+      #endif
+      Wizardform.ReadyMemo.Lines.Add(StringOfChar(' ', 3 * 3) + productLabel);
     end;
   end;
 
