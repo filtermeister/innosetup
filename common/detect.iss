@@ -491,6 +491,63 @@ end;
 
 
 /////////////////////////////////////////////////////////////////////
+///  DetectPhotoimpactFolders
+///
+///  Detects plugin folders for some versions of Ulead PhotoImpact
+///  (tested on X3, but the preference file is shared with earlier
+///  versions).  Tests for the presence of the Ulead INI data file
+///  and reads the lines related to plug-in folders that have been 
+///  configured.  Photoimpact does not have a folder configured out 
+///  of the box - updates to this function might want to modify the 
+///  INI values so they work without user configuration.
+///
+///  PhotoImpact data folder is usually stored at:
+///
+///     C:\Program Data\Ulead Systems\ulead32.ini
+///
+///  There are no 64-bit versions of Ulead PhotoImpact.
+/////////////////////////////////////////////////////////////////////
+
+procedure DetectPhotoimpactFolders(var pluginFolders: TArrayOfPluginFolders);
+var
+  NewPluginFolder: TPluginFolder;
+  Filename: String;
+  FolderPath: String;
+begin
+
+  NewPluginFolder.VendorName      := 'Ulead';
+  NewPluginFolder.ProductName     := 'PhotoImpact';
+  NewPluginFolder.Version         := '';      // Blank because it applies to all versions
+  NewPluginFolder.IsSixtyFourBit  := FALSE;   // There are no 64 bit versions
+
+  // Ulead Photoimpact stores its preferences in an INI file that is
+  // shared across all versions of Photoimpact.  Changes to plugin
+  // folders in one version will affect others.
+
+  // User must have configured the first plugin folder for this to
+  // work, Photoimpact does not come preconfigured with a folder
+  // out of the box.
+
+  Filename := ExpandConstant('{commonappdata}') + '\Ulead Systems\ulead32.ini';
+  if FileExists(Filename) then
+  begin
+    if IniKeyExists('PLUG IN', 'PLUGINDIR1', Filename) then
+      FolderPath := GetIniString('PLUG IN', 'PLUGINDIR1', '', Filename);
+    if Length(FolderPath) > 0 then
+    begin
+       NewPluginFolder.Folder := AddBackslash(folderpath);
+       AddToPluginFolders(NewPluginFolder, pluginFolders)
+    end;
+  end;
+
+  // Do the same thing for ulead32.ini in the Windows Folder,
+  // if we want compatibility with ancient Ulead Photoimpact versions.
+
+end;
+
+
+
+/////////////////////////////////////////////////////////////////////
 ///  GetPluginFolders
 ///
 ///  Detects all the Photoshop plugin folders on the computer and
@@ -528,6 +585,9 @@ begin
 
 	// Serif PhotoPlus versions
 	DetectPhotoplusFolders(pluginFolders);
+
+  // Ulead Photoimpact versions
+  DetectPhotoimpactFolders(pluginFolders);
 
 	// Miscellaneous other PS Plugin compatible apps
 	if DetectPhotolineFolder(TempPluginFolder) then AddToPluginFolders(TempPluginFolder, pluginFolders);
