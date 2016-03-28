@@ -548,6 +548,45 @@ end;
 
 
 /////////////////////////////////////////////////////////////////////
+///  DetectPhotobrushFolders
+///
+///  Detects plugin folders for versions of MediaChance Photo-Brush
+///  from version 2 - 5.  Tests for the presence of the relevant
+///  registry string, and if found, it adds the folder value listed
+///  there to our array of folders to install to.  The user has the
+///  option later whether to install there or not.
+///
+///  Photo-Brush plug-ins folder is usually stored at:
+///
+///     HKLM\SOFTWARE\MediaChance\Photo-Brush\x\Plugins\
+///
+///  where x is the version number.
+/////////////////////////////////////////////////////////////////////
+
+procedure DetectPhotobrushFolders(var pluginFolders: TArrayOfPluginFolders);
+var
+  i: Integer;
+  TempPluginFolder: TPluginFolder;
+  KeyName: String;
+  Param: String;
+  VendName: String;
+  ProdName: String;
+  Version: String;
+begin
+  VendName := 'MediaChance';
+  Param := 'Path';
+  for i := 2 to 10 do
+  begin
+    KeyName   := 'SOFTWARE\MediaChance\Photo-Brush ' + IntToStr(i) + '\Plugins\';
+    Version   := IntToStr(i);
+    ProdName  := 'PhotoBrush ' + IntToStr(i)
+    if GetGenericDirectory(TempPluginFolder, HKCU32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+  end;
+end;
+
+
+
+/////////////////////////////////////////////////////////////////////
 ///  GetPluginFolders
 ///
 ///  Detects all the Photoshop plugin folders on the computer and
@@ -588,6 +627,9 @@ begin
 
   // Ulead Photoimpact versions
   DetectPhotoimpactFolders(pluginFolders);
+
+  // MediaChance Photo-Brush versions
+  DetectPhotobrushFolders(pluginFolders);
 
 	// Miscellaneous other PS Plugin compatible apps
 	if DetectPhotolineFolder(TempPluginFolder) then AddToPluginFolders(TempPluginFolder, pluginFolders);
