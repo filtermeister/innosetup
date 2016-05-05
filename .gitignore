@@ -4,6 +4,9 @@
 # Netbeans
 /nbproject/
 
+# User's plugins
+/Plugins/
+
 # Output
 /Output/
 /Debug/
