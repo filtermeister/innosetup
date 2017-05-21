@@ -587,6 +587,64 @@ end;
 
 
 /////////////////////////////////////////////////////////////////////
+///  Detect PaintDotNet Folders
+///
+///  Detects plugin folders for versions of dotPDN Paint.NET.
+///  Tests for the presence of the Paint.NET 'Effects' folder, 
+///  and if found, it adds the folder to our array of folders to
+///  install to. The user has the option later whether to install
+///  there or not.
+///
+///  Paint.NET installation folder is usually stored at:
+///
+///     HKLM\SOFTWARE\Paint.NET\TARGETDIR
+///
+///  Paint.NET installs a version matching the processor architecture
+///  of the operating system, there are not separate 32-bit and
+///  64-bit versions.
+/////////////////////////////////////////////////////////////////////
+
+procedure DetectPaintDotNetFolders(var pluginFolders: TArrayOfPluginFolders);
+var 
+  TempPluginFolder: TPluginFolder;
+	KeyName: String;
+	Param: String;
+  RegValue: String;
+  EffectsDir: String;
+begin
+    RegValue := '';
+    EffectsDir := '';
+    KeyName := 'SOFTWARE\Paint.NET';
+    Param := 'TARGETDIR';
+    
+    TempPluginFolder.Version := '';  // Applies to all versions.
+    TempPluginFolder.VendorName := 'dotPDN';
+    TempPluginFolder.ProductName := 'Paint.NET';
+    // Paint.NET installs a version matching the processor architecture of the OS.
+    TempPluginFolder.IsSixtyFourBit := Is64BitInstallMode;
+    if Is64BitInstallMode then
+    begin
+      TempPluginFolder.ProductName := TempPluginFolder.ProductName + ' (64-bit)';
+    end;
+    
+    if RegKeyExists(HKLM, KeyName) then
+    begin
+      RegQueryStringValue(HKLM, KeyName, Param, RegValue);
+      if RegValue <> '' then
+      begin
+        EffectsDir := AddBackslash(RegValue) + 'Effects\';
+        if DirExists(EffectsDir) then
+        begin
+          TempPluginFolder.Folder := EffectsDir;
+          AddToPluginFolders(TempPluginFolder, pluginFolders);
+        end;
+      end; 
+    end;
+end;
+
+
+
+/////////////////////////////////////////////////////////////////////
 ///  GetPluginFolders
 ///
 ///  Detects all the Photoshop plugin folders on the computer and
@@ -630,6 +688,9 @@ begin
 
   // MediaChance Photo-Brush versions
   DetectPhotobrushFolders(pluginFolders);
+
+  // dotPDN Paint.NET versions
+  DetectPaintDotNetFolders(pluginFolders);
 
 	// Miscellaneous other PS Plugin compatible apps
 	if DetectPhotolineFolder(TempPluginFolder) then AddToPluginFolders(TempPluginFolder, pluginFolders);
