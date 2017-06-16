@@ -380,6 +380,9 @@ begin
     // If the user has clicked back to the ProgramGroup screen,
     // the task list has been deleted, so we need to set a flag
     // here so we know to recreate the Tasks list again.
+    wpLicense:
+      externalProgramsAdded := False;
+
     wpSelectProgramGroup:
       externalProgramsAdded := False;
 
