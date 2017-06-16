@@ -143,8 +143,8 @@ OutputBaseFilename={#InstallName}
 #endif
 
 ; Optionally display a user license if defined
-#ifdef LicenseFile
-  LicenseFile = {#LicenseFile}
+#ifdef LicenseFileName
+  LicenseFile = {#LicenseFileName}
 #endif
 
 ; Keep all blank for 32-bit only install. Set to x64 for 64-bit (non-Itanium) installs.
