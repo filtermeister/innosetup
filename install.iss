@@ -64,7 +64,7 @@
 #dim Files64[1]
 #define Files64[0]      "example64.8bf"
 
-; The License fill must be agreed to by the user before installing.
+; The License file must be agreed to by the user before installing.
 #define LicenseFileName "Files\license.txt"
 
 ; The ReadMe file will be shown after installation by default.
