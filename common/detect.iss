@@ -1,7 +1,7 @@
 [code]
-/////////////////////////////////////////////////////////////////////////////
-///  Photshop Plugin Detection Functions and Procedures
-/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+///  Photoshop Plugin Detection Functions and Procedures
+/////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////
 ///  GetGenericDirectory
@@ -28,8 +28,8 @@ begin
 		if RegValue <> '' then
 		begin
 			//MsgBox(prodname + ' detected' + sLineBreak + 'Folder: ' + RegValue, mbInformation, mb_Ok);
-            NewPluginFolder.VendorName := vendname;
-            NewPluginFolder.ProductName := prodname;
+			NewPluginFolder.VendorName := vendname;
+			NewPluginFolder.ProductName := prodname;
 			NewPluginFolder.Version := version;
 			NewPluginFolder.IsSixtyFourBit := sixtyfourbit;
 			NewPluginFolder.Folder := AddBackslash(RegValue);
@@ -84,14 +84,14 @@ var
 	Hive: Integer;
 	KeyName: String;
 	Param: String;
-    VendName: String;
+	VendName: String;
 	ProdName: String;
 	Version: String;
 begin
 	Hive     := HKCU;
 	KeyName  := 'Software\Computerinsel\PhotoLine\Settings';
 	Param    := 'PlugInPathNew1';
-    VendName := 'Computerinsel';
+	VendName := 'Computerinsel';
 	ProdName := 'PhotoLine';
 	Version  := '10.5';
 	Result   := GetGenericDirectory(pluginFolderResult, Hive, KeyName, Param, VendName, ProdName, Version, FALSE);
@@ -124,7 +124,7 @@ var
   TempPluginFolder: TPluginFolder;
 	KeyName: String;
 	Param: String;
-    VendName: String;
+	VendName: String;
 	ProdName: String;
 	Version: String;
   Subdirs: array of String;
@@ -202,7 +202,7 @@ begin
 	Param    := 'PluginPath';
 	ProdName := 'Photoshop CS5.1';
 	Version  := '55.0';
-    if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
+	if GetGenericDirectory(TempPluginFolder, HKLM32, KeyName, Param, VendName, ProdName, Version, FALSE) then AddToPluginFolders(TempPluginFolder, pluginFolders);
   if Is64BitInstallMode then
   begin
     ProdName := ProdName + ' (64-bit)';
@@ -302,7 +302,7 @@ var
   TempPluginFolder: TPluginFolder;
 	KeyName: String;
 	Param: String;
-    VendName: String;
+	VendName: String;
 	ProdName: String;
 	Version: String;
 begin
@@ -366,7 +366,7 @@ var
   TempPluginFolder: TPluginFolder;
 	KeyName: String;
 	Param: String;
-    VendName: String;
+	VendName: String;
 	ProdName: String;
 	Version: String;
 begin
@@ -415,7 +415,7 @@ var
   TempPluginFolder: TPluginFolder;
 	KeyName: String;
 	Param: String;
-    VendName: String;
+	VendName: String;
 	ProdName: String;
 	Version: String;
 begin
@@ -463,7 +463,7 @@ var
   TempPluginFolder: TPluginFolder;
 	KeyName: String;
 	Param: String;
-    VendName: String;
+	VendName: String;
 	ProdName: String;
 	Version: String;
 begin
