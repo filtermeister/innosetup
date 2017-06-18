@@ -409,5 +409,3 @@ begin
       UninstallPlugins();
   end;
 end;
-
-#expr SaveToFile(AddBackslash(SourcePath) + "Debug/preprocessed.iss")
