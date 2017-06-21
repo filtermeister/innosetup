@@ -289,6 +289,7 @@ end;
 procedure ShowPluginTasks();
 var
   I: Integer;
+  offset: Integer;
   CustomPluginFolder: TPluginFolder;
   productLabel: string;
 begin
@@ -303,7 +304,18 @@ begin
   // Add the plugins
   for I := 0 to GetArrayLength(pluginFolders) - 1 do
   begin
-    if WizardForm.TasksList.Checked[I + 1] then
+    // Note on the TasksList offset:
+    // WizardForm.TasksList starts at 1 (1-based array, not 0-based).
+    // TasksList[1] refers to the always ticked Program Files folder,
+    // so our offset needs to start at 2.
+    #ifdef CustomDirectory
+      // When enabled, we also need to +1 the offset to skip over the
+      // User Defined plugin folder, to start at item #3.
+      offset := 3
+    #else
+      offset := 2
+    #endif
+    if WizardForm.TasksList.Checked[I + offset] then
     begin
       #ifdef UseVendorNames
         productLabel := pluginFolders[I].VendorName + ' ' + pluginFolders[I].ProductName
