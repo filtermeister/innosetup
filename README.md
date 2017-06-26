@@ -24,7 +24,7 @@ Features
 *	Automatically detect 32-bit or 64-bit.
 *	Install multiple files.
 *	Separate install files for 32-bit and 64-bit.
-*	Shared install files for both 32- and 64-bit.
+*	Shared install files for both 32 and 64-bit.
 *	Configurable look & feel.
 
 Usage
@@ -40,6 +40,7 @@ Detected graphics applications
 *	Adobe Photoshop Elements
 *	Computerinsel Photoline
 *	Corel Paint Shop Pro
+*	dotPDN Paint.NET
 *	MediaChance Photobrush
 *	Serif Photoplus
 *	Ulead Photoimpact
@@ -70,3 +71,4 @@ via the address / website below, or find me on the FMML Mailing List.
 
 - Kohan Ikin
   syneryder@namesuppressed.com / kohanikin.com / namesuppressed.com
+- with contributions by Martijn van der Lee / vanderlee.com
