@@ -13,12 +13,26 @@ var
 begin
   for I := 0 to GetArrayLength(pluginFolders) - 1 do
   begin
+    // If the entry is our additional plugin folder, just skip it
+    // otherwise we get an out of bounds error. The pluginFolders
+    // is meant to be synchronized with the end of
+    // WizardForm.TasksList but adding an additional plugin folder
+    // affects this and causes an out-of-bounds exception when
+    // trying to check if the last item in the TasksList is
+    // checked or not. So here we skip it by detecting a 'internal'
+    // plugin folder, knowing it will always be the last one.
+    // This isn't the best way to handle this - but it works, and
+    // will do for now until we can refactor how additional folders
+    // are handled.
+    if (pluginFolders[I].VendorName = 'Internal') then continue;
+
     // NB: If changing offset code here, also change the corresponding
     // offset code in the root level install.iss file as well.
     // Note on the TasksList offset:
     // WizardForm.TasksList starts at 1 (1-based array, not 0-based).
     // TasksList[1] refers to the always ticked Program Files folder,
     // so our offset needs to at least start at 2.
+    
     #ifdef CustomDirectory
       // When enabled, we also need to +1 the offset again to skip
       // over the User Defined plugin folder, to start at item #3.
@@ -26,6 +40,7 @@ begin
     #else
       offset := 2
     #endif
+
     if WizardForm.TasksList.Checked[I + offset] then
     begin
       // This next line necessary with Paint Shop Pro X2, which doesn't

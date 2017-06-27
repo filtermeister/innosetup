@@ -294,7 +294,20 @@ var
   productLabel: string;
 begin
   #ifdef CustomDirectory
-    // Add the directory path if customdir is used
+    // If last item in the array is our custom folder path (because the user
+    // clicked the back button and came back to this screen), we need to
+    // first remove it from the array again. We do this here by resizing the
+    // array to be one item smaller. We'll add it at the end of this screen.
+    if GetArrayLength(pluginFolders) > 1 then
+    begin
+      if pluginFolders[GetArrayLength(pluginFolders) - 1].VendorName = 'Internal' then
+      begin
+        SetArrayLength(pluginFolders, GetArrayLength(pluginFolders) - 1);
+      end;
+    end;
+
+    // Add text of directory path to the Ready screen if customdir is used
+    // We add the actual folder object later on, at the end of this function
     if IsTaskSelected('CustomDirTask') and not (CustomDirPage.Values[0] = '') then
     begin
       Wizardform.ReadyMemo.Lines.Add(StringOfChar(' ', 4 * 3) + CustomDirPage.Values[0]);
@@ -332,6 +345,8 @@ begin
     begin
       CustomPluginFolder.IsSixtyFourBit := Is64BitInstallMode;
       CustomPluginFolder.Folder := AddBackslash(CustomDirPage.Values[0]);
+      CustomPluginFolder.VendorName := 'Internal';
+      CustomPluginFolder.ProductName := 'CustomFolder';
       AddToPluginFolders(CustomPluginFolder, pluginFolders);
     end
   #endif
