@@ -12,7 +12,7 @@
 #define MajorVersion    "2"
 #define VersionNumber   "2.0"
 #define FullVersion     "2.0.0.0"
-#define CopyrightYear   "2016"
+#define CopyrightYear   "2017"
 #define CompanyURL      "http://www.example.com/"
 #define SupportURL      "http://www.example.com/"
 #define InstallName     "ExamplePluginInstall"
