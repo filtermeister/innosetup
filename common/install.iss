@@ -8,7 +8,6 @@ var
   isFile32Extracted: Boolean;
   isFile64Extracted: Boolean;
   isFileExtracted: Boolean;
-  CustomPluginFolder: TPluginFolder;
   offset: Integer;
 begin
   for I := 0 to GetArrayLength(pluginFolders) - 1 do
