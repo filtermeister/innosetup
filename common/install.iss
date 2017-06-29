@@ -158,9 +158,5 @@ begin
       // Delete the registry key
       RegDeleteValue(HKLM, 'Software\{#CompanyName}\{#ProductName} {#MajorVersion}', 'Install' + IntToStr(I));
     end
-    else
-      // Since the indexes are an unbroken sequence, a missing index
-      // indicates the end of the sequence and we can stop.
-      Break;
   end;
 end;
