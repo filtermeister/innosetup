@@ -45,22 +45,26 @@
 ; Specify a list of files to install to the installation directory.
 ; If you want to share physical files on disk, this would be the 
 ; most common place to install those files.
+; List each file individually, no wildcards here (ie no '*.txt').
 #dim InstallFiles[1]
 #define InstallFiles[0] "install.txt"
 
 ; Specify a list of common files to install for both the 32-bit &
 ; 64-bit version of your installation.
 ; If you don't have any common files, then comment these lines out.
+; List each file individually, no wildcards here (ie no '*.txt').
 #dim Files[1]
 #define Files[0]        "common.txt"
 
 ; Specify a list of files to install for the 32-bit version only.
 ; If you don't have any 32-bit files, then comment these lines out.
+; List each plugin file individually, no wildcards.
 #dim Files32[1]
 #define Files32[0]      "example32.8bf"
 
 ; Specify a list of files to install for the 64-bit version only.
 ; If you don't have any 64-bit files, then comment these lines out.
+; List each plugin file individually, no wildcards.
 #dim Files64[1]
 #define Files64[0]      "example64.8bf"
 
