@@ -65,6 +65,47 @@ end;
 
 
 /////////////////////////////////////////////////////////////////////
+///  DetectAffinityPhoto1Folder
+///
+///  Detects plug-in folder for Affinity Photo 1.x. Plug-in folder
+///  details aren't stored in the registry by Affinity Photo, so this
+///  function checks for the physical presence of the folder (and
+///  then adds the folder value to our array of folders to install
+///  into).
+///
+///  The Affinity Photo 1.x plug-ins folder is:
+///
+///  CSIDL_COMMON_APPDATA \Affinity\Photo\1.0\Plugins
+///
+///  which is usually expanded out to:
+///
+///  C:\ProgramData\Affinity\Photo\1.0\Plugins
+/////////////////////////////////////////////////////////////////////
+
+procedure DetectAffinityPhoto1Folder(var pluginFolders: TArrayOfPluginFolders);
+var
+	NewPluginFolder: TPluginFolder;
+	FolderPath: String;
+begin
+	NewPluginFolder.VendorName      := 'Affinity';
+	NewPluginFolder.ProductName     := 'Photo 1';
+	NewPluginFolder.Version         := '1.0';
+	NewPluginFolder.IsSixtyFourBit  := TRUE;   // There are no 32-bit versions
+	// Affinity Photo is a 64-bit only program
+	if Is64BitInstallMode then
+	begin
+		FolderPath := ExpandConstant('{commonappdata}') + '\Affinity\Photo\1.0\Plugins\';
+		if DirExists(FolderPath) then
+		begin
+			NewPluginFolder.Folder := FolderPath;
+			AddToPluginFolders(NewPluginFolder, pluginFolders)
+		end;
+	end;
+end;
+
+
+
+/////////////////////////////////////////////////////////////////////
 ///  DetectPhotolineFolder
 ///
 ///  Detects plug-in folder for Computerinsel Photoline 10.5.  Tests
@@ -680,7 +721,8 @@ begin
 	DetectPaintShopProEarlyXFolders(pluginFolders);
 	DetectPaintShopProModernFolders(pluginFolders);
 
-	// Serif PhotoPlus versions
+	// Serif PhotoPlus and Affinity Photo versions
+	DetectAffinityPhoto1Folder(pluginFolders);
 	DetectPhotoplusFolders(pluginFolders);
 
   // Ulead Photoimpact versions

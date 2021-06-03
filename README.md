@@ -38,6 +38,7 @@ Detected graphics applications
 ------------------------------
 *	Adobe Photoshop
 *	Adobe Photoshop Elements
+*	Affinity Photo
 *	Computerinsel Photoline
 *	Corel Paint Shop Pro
 *	dotPDN Paint.NET
