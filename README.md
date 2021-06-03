@@ -71,5 +71,8 @@ Hope you find it useful!  If you have questions, you can email me
 via the address / website below, or find me on the FMML Mailing List.
 
 - Kohan Ikin
-  syneryder@namesuppressed.com / kohanikin.com / namesuppressed.com
-- with contributions by Martijn van der Lee / vanderlee.com
+  syneryder@namesuppressed.com
+  https://kohanikin.com / https://www.namesuppressed.com
+
+- with contributions by Martijn van der Lee
+  https://www.vanderlee.com
